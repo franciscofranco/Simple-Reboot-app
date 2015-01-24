@@ -70,6 +70,30 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/soft_reboot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:minHeight="64dp"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/soft_reboot"
+                android:paddingBottom="2dp"
+                style="@style/TextAppearance.AppCompat.Body1"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/soft_reboot_summary"
+                style="@style/TextAppearance.AppCompat.Caption"/>
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/reboot_recovery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -114,6 +138,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/reboot_bootloader_summary"
+                style="@style/TextAppearance.AppCompat.Caption"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/reboot_safe_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:minHeight="64dp"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reboot_safe_mode"
+                android:paddingBottom="2dp"
+                style="@style/TextAppearance.AppCompat.Body1"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reboot_safe_mode_summary"
                 style="@style/TextAppearance.AppCompat.Caption"/>
         </LinearLayout>
 

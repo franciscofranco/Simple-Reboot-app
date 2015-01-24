@@ -15,5 +15,9 @@
     <string name="root_status">Root status</string>
     <string name="root_status_no">Not available - this app won\'t work.</string>
     <string name="root_status_yes">Available.</string>
+    <string name="soft_reboot">Soft reboot</string>
+    <string name="soft_reboot_summary">Solely restarts the Android UI by killing zygote process.</string>
+    <string name="reboot_safe_mode">Reboot into safe mode</string>
+    <string name="reboot_safe_mode_summary">Special mode to help you debug issues (for example you installed an app that might be misbehaving) by loading a barebones Android installation.</string>
 
 </resources>

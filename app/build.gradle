@@ -7,17 +7,18 @@ android {
         applicationId 'simple.reboot.com'
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 9
-        versionName "4.0"
+        versionCode 10
+        versionName "4p10"
     }
-
     signingConfigs {
+       
     }
-    
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     productFlavors {
@@ -27,6 +28,6 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.jakewharton:butterknife:6.0.0'
-    compile project(':libs:libsuperuser')
+    compile 'com.jakewharton:butterknife:6.0.+'
+    compile 'eu.chainfire:libsuperuser:1.0.0.+'
 }

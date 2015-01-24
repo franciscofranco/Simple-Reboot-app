@@ -23,11 +23,19 @@ public class MainActivity extends ActionBarActivity {
     /**
      * It's good practice to declare immutable variables in upper case
      */
+    private static final String SHUTDOWN_BROADCAST
+            = "am broadcast android.intent.action.ACTION_SHUTDOWN";
     private static final String REBOOT_CMD = "reboot";
+    private static final String REBOOT_SOFT_REBOOT_CMD = "setprop ctl.restart zygote";
     private static final String REBOOT_RECOVERY_CMD = "reboot recovery";
     private static final String REBOOT_BOOTLOADER_CMD = "reboot bootloader";
+    private static final String[] REBOOT_SAFE_MODE
+            = new String[]{"setprop persist.sys.safemode 1", REBOOT_SOFT_REBOOT_CMD};
     private static final String PLAY_STORE_MY_APPS
             = "https://play.google.com/store/apps/developer?id=Francisco+Franco";
+
+    private static final int BG_PRIO = android.os.Process.THREAD_PRIORITY_BACKGROUND;
+    private static final int RUNNABLE_DELAY_MS = 1000;
 
     /**
      * This annotation comes from ButterKnife lib. Please it's documentation to understand what
@@ -77,6 +85,8 @@ public class MainActivity extends ActionBarActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                setThreadPrio(BG_PRIO);
+
                 if (Shell.SU.available()) {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
@@ -89,6 +99,53 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
         }).start();
+    }
+
+    /**
+     * By default a new Thread has a higher 'nice' value than a true BG thread
+     * so we make sure it's actually correct.
+     *
+     * @param prio Integer from android.os.Process
+     */
+    private static void setThreadPrio(int prio) {
+        android.os.Process.setThreadPriority(prio);
+    }
+
+    /**
+     * Helper class to spawn a new Thread that runs a CMD param for this specific app scenario
+     * to avoid repeating code all over the click listeners
+     */
+    private static class MyBgThread extends Thread {
+        private Object sCmd;
+
+        private MyBgThread(Object cmd) {
+            this.sCmd = cmd;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            setThreadPrio(BG_PRIO);
+
+            if (sCmd == null)
+                return;
+
+            /**
+             * Sending a system broadcast to notify apps and the system that we're going down
+             * so that they write any outstanding data that might need to be flushed
+             */
+            Shell.SU.run(SHUTDOWN_BROADCAST);
+
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (sCmd instanceof String)
+                        Shell.SU.run((String) sCmd);
+                    else if (sCmd instanceof String[])
+                        Shell.SU.run((String[]) sCmd);
+                }
+            }, RUNNABLE_DELAY_MS);
+        }
     }
 
     /**
@@ -109,38 +166,33 @@ public class MainActivity extends ActionBarActivity {
      * lifecycle, we just want to run these root commands on the background thread so that we
      * don't block the main thread, so for this case it's acceptable to just do new Thread() and
      * get along with it
-     *
+     * <p/>
      * What each command does it's pretty self explanatory.
      */
 
     @OnClick(R.id.reboot)
     public void onRebootClick(View view) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Shell.SU.run(REBOOT_CMD);
-            }
-        }).start();
+        new MyBgThread(REBOOT_CMD).start();
+    }
+
+    @OnClick(R.id.soft_reboot)
+    public void onSoftRebootClick(View view) {
+        new MyBgThread(REBOOT_SOFT_REBOOT_CMD).start();
     }
 
     @OnClick(R.id.reboot_recovery)
     public void onRebootRecoveryClick(View view) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Shell.SU.run(REBOOT_RECOVERY_CMD);
-            }
-        }).start();
+        new MyBgThread(REBOOT_RECOVERY_CMD).start();
     }
 
     @OnClick(R.id.reboot_bootloader)
     public void onRebootBootloaderClick(View view) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Shell.SU.run(REBOOT_BOOTLOADER_CMD);
-            }
-        }).start();
+        new MyBgThread(REBOOT_BOOTLOADER_CMD).start();
+    }
+
+    @OnClick(R.id.reboot_safe_mode)
+    public void onRebootSafeModeClick(View view) {
+        new MyBgThread(REBOOT_SAFE_MODE).start();
     }
 
     @Override
