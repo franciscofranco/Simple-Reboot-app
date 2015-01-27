@@ -25,6 +25,7 @@ public class MainActivity extends ActionBarActivity {
      */
     private static final String SHUTDOWN_BROADCAST
             = "am broadcast android.intent.action.ACTION_SHUTDOWN";
+    private static final String SHUTDOWN = "reboot -p";
     private static final String REBOOT_CMD = "reboot";
     private static final String REBOOT_SOFT_REBOOT_CMD = "setprop ctl.restart zygote";
     private static final String REBOOT_RECOVERY_CMD = "reboot recovery";
@@ -170,6 +171,11 @@ public class MainActivity extends ActionBarActivity {
      * What each command does it's pretty self explanatory.
      */
 
+    @OnClick(R.id.shutdown)
+    public void onShutdownClick(View view) {
+        new MyBgThread(SHUTDOWN).start();
+    }
+
     @OnClick(R.id.reboot)
     public void onRebootClick(View view) {
         new MyBgThread(REBOOT_CMD).start();
@@ -197,7 +203,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         ButterKnife.reset(this);
+        super.onDestroy();
     }
 }

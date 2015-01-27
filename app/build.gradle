@@ -7,11 +7,11 @@ android {
         applicationId 'simple.reboot.com'
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 10
-        versionName "4p10"
+        versionCode 11
+        versionName "4p11"
     }
     signingConfigs {
-       
+
     }
     buildTypes {
         release {
