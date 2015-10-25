@@ -4,22 +4,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
+import android.os.Process;
+import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.TextView;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import eu.chainfire.libsuperuser.Shell;
 
-/**
- * The Activity extends ActionBarActivity because that's a requirement per the new API for it to
- * bound with the Toolbar. I suggest you to read Chris Banes (Google programmer) blog about this
- */
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
     /**
      * It's good practice to declare immutable variables in upper case
      */
@@ -35,32 +30,18 @@ public class MainActivity extends ActionBarActivity {
     private static final String PLAY_STORE_MY_APPS
             = "https://play.google.com/store/apps/developer?id=Francisco+Franco";
 
-    private static final int BG_PRIO = android.os.Process.THREAD_PRIORITY_BACKGROUND;
+    private static final int BG_PRIO = Process.THREAD_PRIORITY_BACKGROUND;
     private static final int RUNNABLE_DELAY_MS = 1000;
 
-    /**
-     * This annotation comes from ButterKnife lib. Please it's documentation to understand what
-     * it does, but it's pretty self explanatory since I'm not doing findViewById rogrammatically
-     * during activity create
-     */
-    @InjectView(R.id.root_status)
-    protected TextView mRootStatusSummary;
+    private static Handler mMainThreadHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
-        ButterKnife.inject(this);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        /**
-         * As per new Support API we can use a Toolbar instead of a ActionBar. The big difference
-         * functionality wise is that the Toolbar is part of the View hierarchy of your layout
-         * and because of that you have full control over it like a normal View,
-         * which is pretty useful. You can also use a normal Navigation Drawer with it,
-         * but for that you should consult API details as it's not the purpose of this app.
-         */
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mMainThreadHandler = new Handler(getMainLooper());
 
         /**
          * Starting a new generic Thread like this is not the best practice because it's not
@@ -88,15 +69,15 @@ public class MainActivity extends ActionBarActivity {
             public void run() {
                 setThreadPrio(BG_PRIO);
 
-                if (Shell.SU.available()) {
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mRootStatusSummary != null) {
-                                mRootStatusSummary.setText(R.string.root_status_yes);
-                            }
-                        }
-                    });
+                if (!Shell.SU.available()) {
+                    Snackbar.make(getWindow().getDecorView(), R.string.root_status_no, Snackbar.LENGTH_INDEFINITE)
+                            .setAction(R.string.close, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    finish();
+                                }
+                            })
+                            .show();
                 }
             }
         }).start();
@@ -109,7 +90,7 @@ public class MainActivity extends ActionBarActivity {
      * @param prio Integer from android.os.Process
      */
     private static void setThreadPrio(int prio) {
-        android.os.Process.setThreadPriority(prio);
+        Process.setThreadPriority(prio);
     }
 
     /**
@@ -137,13 +118,14 @@ public class MainActivity extends ActionBarActivity {
              */
             Shell.SU.run(SHUTDOWN_BROADCAST);
 
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            mMainThreadHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (sCmd instanceof String)
+                    if (sCmd instanceof String) {
                         Shell.SU.run((String) sCmd);
-                    else if (sCmd instanceof String[])
+                    } else if (sCmd instanceof String[]) {
                         Shell.SU.run((String[]) sCmd);
+                    }
                 }
             }, RUNNABLE_DELAY_MS);
         }
@@ -203,7 +185,9 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onDestroy() {
-        ButterKnife.reset(this);
+        mMainThreadHandler = null;
+
+        ButterKnife.unbind(this);
         super.onDestroy();
     }
 }

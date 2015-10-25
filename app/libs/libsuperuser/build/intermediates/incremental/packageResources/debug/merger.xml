@@ -1,2 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/Users/francisco/Dropbox/eclipse/ProjectPretzels/libs/libsuperuser/res"/><source path="/Users/francisco/Dropbox/eclipse/ProjectPretzels/libs/libsuperuser/build/generated/res/rs/debug"/><source path="/Users/francisco/Dropbox/eclipse/ProjectPretzels/libs/libsuperuser/build/generated/res/generated/debug"/></dataSet><dataSet config="debug"><source path="/Users/francisco/Dropbox/eclipse/ProjectPretzels/libs/libsuperuser/src/debug/res"/></dataSet><mergedItems/></merger>
