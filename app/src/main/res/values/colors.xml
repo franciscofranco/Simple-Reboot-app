@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dialogBackgroundColor">#202A2F</color>
+    <color name="dividerBackgroundColor">#22FFFFFF</color>
+</resources>

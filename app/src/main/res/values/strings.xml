@@ -6,10 +6,10 @@
     <string name="reboot_summary">Restart your device.</string>
     <string name="reboot_recovery">Reboot to recovery</string>
     <string name="reboot_recovery_summary">Restart and boot into your device\'s recovery.</string>
-    <string name="reboot_bootloader">Reboot to the bootloader</string>
+    <string name="reboot_bootloader">Reboot to bootloader</string>
     <string name="reboot_bootloader_summary">Restart and boot to your bootloader. This might or might not work depending on the device\'s OEM implementation.</string>
     <string name="about_author">SimpleReboot</string>
-    <string name="about_author_summary">Tap to check my other apps</string>
+    <string name="about_author_summary">Check my other apps</string>
     <string name="root_status">Root status</string>
     <string name="root_status_no">Root not available - this app won\'t work properly</string>
     <string name="root_status_yes">Available.</string>

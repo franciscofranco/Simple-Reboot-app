@@ -1,5 +1,11 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="dialogMargin">16dp</dimen>
+    <dimen name="dialogMinWidth">280dp</dimen>
+    <dimen name="dialogElevation">8dp</dimen>
+    <dimen name="aboutMinHeight">64dp</dimen>
+    <dimen name="aboutPadding">16dp</dimen>
+    <dimen name="aboutTitlePaddingBottom">2dp</dimen>
+    <dimen name="itemMinHeight">56dp</dimen>
+    <dimen name="itemPadding">16dp</dimen>
+    <dimen name="dividerHeight">0.5dp</dimen>
 </resources>
