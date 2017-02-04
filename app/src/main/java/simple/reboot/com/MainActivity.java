@@ -18,6 +18,7 @@ import butterknife.OnClick;
 import eu.chainfire.libsuperuser.Shell;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String BACKGROUND_THREAD = "BackgroundThread";
 
     // just for safe measure, we don't want any data corruption, right?
     private static String[] SHUTDOWN_BROADCAST() {
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        HandlerThread mHandlerThread = new HandlerThread("BackgroundThread");
+        HandlerThread mHandlerThread = new HandlerThread(BACKGROUND_THREAD);
         mHandlerThread.start();
         mHandler = new Handler(mHandlerThread.getLooper());
 
@@ -109,9 +110,8 @@ public class MainActivity extends AppCompatActivity {
      */
     @OnClick(R.id.about)
     public void onAboutClick(View view) {
-        String url = PLAY_STORE_MY_APPS;
         Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(url));
+        i.setData(Uri.parse(PLAY_STORE_MY_APPS));
         startActivity(i);
     }
 
