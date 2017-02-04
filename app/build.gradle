@@ -1,18 +1,17 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 
 ext {
-    SUPPORT_LIB = '24.1.1'
+    SUPPORT_LIB = '25.1.1'
 }
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         applicationId 'simple.reboot.com'
         minSdkVersion 16
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode getVersionCodeTimestamp()
         versionName "6.0"
     }
@@ -50,7 +49,7 @@ android {
     }
 }
 
-def getVersionCodeTimestamp() {
+static def getVersionCodeTimestamp() {
     return new Date().format('yyMMddHHmm').toInteger()
 }
 
@@ -59,7 +58,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB}"
     compile "com.android.support:cardview-v7:${SUPPORT_LIB}"
     compile "com.android.support:design:${SUPPORT_LIB}"
-    compile 'com.jakewharton:butterknife:8.2.1'
-    apt 'com.jakewharton:butterknife-compiler:8.2.1'
+    compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     compile 'eu.chainfire:libsuperuser:1.0.0.+'
 }
