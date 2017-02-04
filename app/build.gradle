@@ -23,7 +23,9 @@ android {
 
     lintOptions {
         abortOnError false
+        checkAllWarnings false
         disable 'InvalidPackage'
+        tasks.lint.enabled = false
     }
 
     signingConfigs {
