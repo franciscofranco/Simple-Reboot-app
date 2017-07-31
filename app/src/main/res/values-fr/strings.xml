@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Simple Reboot</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="reboot">Redémarrer</string>
+    <string name="reboot_summary">Redémarre votre appareil.</string>
+    <string name="reboot_recovery">Redémarrer en mode récupération</string>
+    <string name="reboot_recovery_summary">Redémarre et boote dans le mode récupération de votre appareil.</string>
+    <string name="reboot_bootloader">Redémarrer sur le bootloader</string>
+    <string name="reboot_bootloader_summary">Redémarre sur le bootloader. Cela pourrait ne pas fonctionner selon l\'équipementier de l\'appareil.</string>
+    <string name="about_author_summary">Mes autres applications</string>
+    <string name="root_status">Statut root</string>
+    <string name="root_status_no">Root indisponible - cette application ne fonctionnera pas correctement</string>
+    <string name="root_status_yes">Disponible</string>
+    <string name="soft_reboot">Redémarrage Logiciel</string>
+    <string name="soft_reboot_summary">Redémarre uniquement l\'interface utilisateur Android en tuant le processus Zygote.</string>
+    <string name="reboot_safe_mode">Redémarrer en mode sans échec</string>
+    <string name="reboot_safe_mode_summary">Mode spécial pour vous aider à déboguer les problèmes (par exemple quand vous avez installé une application connaissant des disfonctionnments)</string>
+    <string name="shutdown">Éteindre</string>
+    <string name="shutdown_summary">Éteint votre appareil.</string>
+    <string name="close">Fermer</string>
+</resources>
