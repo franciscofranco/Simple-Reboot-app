@@ -1,24 +1,20 @@
 apply plugin: 'com.android.application'
 
-ext {
-    SUPPORT_LIB = '25.1.1'
-}
-
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 29
+    buildToolsVersion "29.0.1"
 
     defaultConfig {
         applicationId 'simple.reboot.com'
-        minSdkVersion 16
-        targetSdkVersion 25
-        versionCode getVersionCodeTimestamp()
-        versionName "7.0.1"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1803261729
+        versionName "8.1"
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     lintOptions {
@@ -30,9 +26,11 @@ android {
 
     signingConfigs {
         debug {
+
         }
 
         release {
+
         }
     }
 
@@ -40,29 +38,24 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            manifestPlaceholders = [vmSafeModeEnabled: "false"]
         }
 
         debug {
             minifyEnabled false
             shrinkResources false
-            manifestPlaceholders = [vmSafeModeEnabled: "true"]
         }
     }
 }
 
-static def getVersionCodeTimestamp() {
-    return new Date().format('yyMMddHHmm').toInteger()
-}
-
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.android.support:appcompat-v7:${SUPPORT_LIB}"
-    compile "com.android.support:cardview-v7:${SUPPORT_LIB}"
-    compile "com.android.support:design:${SUPPORT_LIB}"
-    compile 'com.jakewharton:butterknife:8.5.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
-    compile 'eu.chainfire:libsuperuser:1.0.0.+'
+    implementation 'com.google.android.material:material:1.1.0-alpha08'
+    if (properties.containsKey('android.injected.invoked.from.ide')) {
+        implementation 'com.jakewharton:butterknife-reflect:10.1.0'
+    } else {
+        implementation 'com.jakewharton:butterknife-runtime:10.1.0'
+        annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+    }
+    implementation 'com.github.topjohnwu.libsu:core:2.5.0'
 }

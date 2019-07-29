@@ -15,3 +15,6 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception

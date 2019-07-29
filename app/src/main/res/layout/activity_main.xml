@@ -1,115 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    android:id="@+id/card_view"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:layout_margin="@dimen/dialogMargin"
-    android:minWidth="@dimen/dialogMinWidth"
-    app:cardBackgroundColor="@color/dialogBackgroundColor"
-    app:cardElevation="@dimen/dialogElevation"
-    app:cardUseCompatPadding="true">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/container"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_gravity="end"
+        android:visibility="invisible"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="@dimen/dialogElevation"
+        app:cardUseCompatPadding="true"
+        tools:visibility="visible">
 
         <LinearLayout
-            android:id="@+id/about"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:minHeight="@dimen/aboutMinHeight"
-            android:orientation="vertical"
-            android:padding="@dimen/aboutPadding">
+            android:orientation="vertical">
 
             <TextView
-                style="@style/TextAppearance.AppCompat.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/aboutTitlePaddingBottom"
-                android:text="@string/app_name"/>
+                android:id="@+id/shutdown"
+                style="@style/TextViewItems"
+                android:drawablePadding="8dp"
+                android:drawableTop="@drawable/ic_power_off"
+                android:text="@string/shutdown" />
 
             <TextView
-                style="@style/TextAppearance.AppCompat.Body1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/about_author_summary"/>
+                android:id="@+id/reboot"
+                style="@style/TextViewItems"
+                android:drawablePadding="8dp"
+                android:drawableTop="@drawable/ic_restart"
+                android:text="@string/reboot" />
+
+            <TextView
+                android:id="@+id/soft_reboot"
+                style="@style/TextViewItems"
+                android:text="@string/soft_reboot" />
+
+            <TextView
+                android:id="@+id/reboot_recovery"
+                style="@style/TextViewItems"
+                android:text="@string/reboot_recovery" />
+
+            <TextView
+                android:id="@+id/reboot_bootloader"
+                style="@style/TextViewItems"
+                android:text="@string/reboot_bootloader" />
+
+            <TextView
+                android:id="@+id/reboot_safe_mode"
+                style="@style/TextViewItems"
+                android:text="@string/reboot_safe_mode" />
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dividerHeight"
-            android:background="@color/dividerBackgroundColor"/>
-
-        <TextView
-            android:id="@+id/shutdown"
-            style="@style/TextAppearance.AppCompat.Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:minHeight="@dimen/itemMinHeight"
-            android:padding="@dimen/itemPadding"
-            android:text="@string/shutdown"/>
-
-        <TextView
-            android:id="@+id/reboot"
-            style="@style/TextAppearance.AppCompat.Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:minHeight="@dimen/itemMinHeight"
-            android:padding="@dimen/itemPadding"
-            android:text="@string/reboot"/>
-
-        <TextView
-            android:id="@+id/soft_reboot"
-            style="@style/TextAppearance.AppCompat.Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:minHeight="@dimen/itemMinHeight"
-            android:padding="@dimen/itemPadding"
-            android:text="@string/soft_reboot"/>
-
-        <TextView
-            android:id="@+id/reboot_recovery"
-            style="@style/TextAppearance.AppCompat.Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:minHeight="@dimen/itemMinHeight"
-            android:padding="@dimen/itemPadding"
-            android:text="@string/reboot_recovery"/>
-
-        <TextView
-            android:id="@+id/reboot_bootloader"
-            style="@style/TextAppearance.AppCompat.Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:minHeight="@dimen/itemMinHeight"
-            android:padding="@dimen/itemPadding"
-            android:text="@string/reboot_bootloader"/>
-
-        <TextView
-            android:id="@+id/reboot_safe_mode"
-            style="@style/TextAppearance.AppCompat.Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center_vertical"
-            android:minHeight="@dimen/itemMinHeight"
-            android:padding="@dimen/itemPadding"
-            android:text="@string/reboot_safe_mode"/>
-    </LinearLayout>
-</android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

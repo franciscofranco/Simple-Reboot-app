@@ -1,24 +1,27 @@
 package simple.reboot.com;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.support.annotation.NonNull;
-import android.support.annotation.WorkerThread;
-import android.support.design.widget.Snackbar;
-import android.support.v4.os.AsyncTaskCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
-import butterknife.ButterKnife;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.topjohnwu.superuser.Shell;
+
+import butterknife.BindView;
 import butterknife.OnClick;
-import eu.chainfire.libsuperuser.Shell;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String BACKGROUND_THREAD = "BackgroundThread";
+    @BindView(R.id.coordinator)
+    protected CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.container)
+    protected ViewGroup container;
 
     // just for safe measure, we don't want any data corruption, right?
     private static String[] SHUTDOWN_BROADCAST() {
@@ -36,115 +39,130 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
-    private static final String SHUTDOWN = "reboot -p";
-    private static final String REBOOT_CMD = "reboot";
+    private static final String SHUTDOWN = "svc power shutdown";
+    private static final String REBOOT_CMD = "svc power reboot";
     private static final String REBOOT_SOFT_REBOOT_CMD = "setprop ctl.restart zygote";
     private static final String REBOOT_RECOVERY_CMD = "reboot recovery";
     private static final String REBOOT_BOOTLOADER_CMD = "reboot bootloader";
     private static final String[] REBOOT_SAFE_MODE
             = new String[]{"setprop persist.sys.safemode 1", REBOOT_SOFT_REBOOT_CMD};
-    private static final String PLAY_STORE_MY_APPS
-            = "https://play.google.com/store/apps/developer?id=Francisco+Franco";
-
-    private static final int RUNNABLE_DELAY_MS = 1000;
-
-    private Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        new MainActivity_ViewBinding(this);
 
-        HandlerThread mHandlerThread = new HandlerThread(BACKGROUND_THREAD);
-        mHandlerThread.start();
-        mHandler = new Handler(mHandlerThread.getLooper());
-
-        AsyncTaskCompat.executeParallel(new AsyncTask<Void, Void, Boolean>() {
-            @Override
-            protected Boolean doInBackground(Void... voids) {
-                return Shell.SU.available();
-            }
-
-            @Override
-            protected void onPostExecute(Boolean rootNotAvailable) {
-
-                // We don't really know if the activity is still alive at this point. The information we want to
-                // show is not really critical so we can just wrap it around a try & catch and let it fail
-                // gracefully
-                if (!rootNotAvailable) {
-                    try {
-                        Snackbar.make(getWindow().getDecorView(), R.string.root_status_no,
-                                Snackbar.LENGTH_INDEFINITE)
-                                .setAction(R.string.close, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        finish();
-                                    }
-                                })
-                                .show();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+        Shell.getShell(shell -> {
+            if (!shell.isRoot()) {
+                if (coordinatorLayout != null) {
+                    Snackbar.make(coordinatorLayout, R.string.root_status_no,
+                            Snackbar.LENGTH_INDEFINITE)
+                            .setAction(R.string.close, view -> finishAnimation()).show();
                 }
             }
         });
+
+        container.getViewTreeObserver()
+                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        if (container != null) {
+                            container.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                            container.setTranslationY(coordinatorLayout.getHeight() >> 2);
+                            container.setTranslationX(container.getWidth());
+                            container.animate().cancel();
+                            container.animate().translationX(0f).setStartDelay(100)
+                                    .setListener(new AnimatorListenerAdapter() {
+                                        @Override
+                                        public void onAnimationStart(Animator animation) {
+                                            container.setVisibility(View.VISIBLE);
+                                        }
+                                    })
+                                    .start();
+                        }
+                    }
+                });
     }
 
-    @WorkerThread
-    private void runCmd(long timeout, @NonNull final String... cmd) {
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Shell.SU.run(cmd);
-                mHandler.removeCallbacks(this);
-            }
-        }, timeout);
+    private void finishAnimation() {
+        if (container != null) {
+            container.animate().cancel();
+            container.animate().translationX(container.getWidth())
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            finish();
+                        }
+                    })
+                    .start();
+        }
     }
 
-    /**
-     * The following @OnClick annotations are part of ButterKnife's lib. If you wish to learn
-     * about it please read its documentation
-     *
-     * @see <a href="http://jakewharton.github.io/butterknife/">ButterKnife</a>
-     */
-    @OnClick(R.id.about)
-    public void onAboutClick(View view) {
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(PLAY_STORE_MY_APPS));
-        startActivity(i);
+    private void runCmd(@NonNull final String... cmd) {
+        finishAnimation();
+        Shell.su(cmd).submit();
+    }
+
+    private void runCmdWithCallback(Shell.ResultCallback callback, @NonNull final String... cmd) {
+        finishAnimation();
+        Shell.su(cmd).submit(callback);
+    }
+
+    @OnClick(R.id.coordinator)
+    protected void onParentClick() {
+        onBackPressed();
     }
 
     @OnClick(R.id.shutdown)
     public void onShutdownClick(View view) {
-        runCmd(0, SHUTDOWN);
+        runCmd(SHUTDOWN);
     }
 
     @OnClick(R.id.reboot)
     public void onRebootClick(View view) {
-        runCmd(0, REBOOT_CMD);
+        runCmd(REBOOT_CMD);
     }
 
     @OnClick(R.id.soft_reboot)
     public void onSoftRebootClick(View view) {
-        runCmd(0, SHUTDOWN_BROADCAST());
-        runCmd(RUNNABLE_DELAY_MS, REBOOT_SOFT_REBOOT_CMD);
+        runCmdWithCallback(out -> {
+            if (out.isSuccess()) {
+                runCmd(REBOOT_SOFT_REBOOT_CMD);
+            }
+        }, SHUTDOWN_BROADCAST());
     }
 
     @OnClick(R.id.reboot_recovery)
     public void onRebootRecoveryClick(View view) {
-        runCmd(0, SHUTDOWN_BROADCAST());
-        runCmd(RUNNABLE_DELAY_MS, REBOOT_RECOVERY_CMD);
+        runCmdWithCallback(out -> {
+            if (out.isSuccess()) {
+                runCmd(REBOOT_RECOVERY_CMD);
+            }
+        }, SHUTDOWN_BROADCAST());
     }
 
     @OnClick(R.id.reboot_bootloader)
     public void onRebootBootloaderClick(View view) {
-        runCmd(0, REBOOT_BOOTLOADER_CMD);
+        runCmdWithCallback(out -> {
+            if (out.isSuccess()) {
+                runCmd(REBOOT_BOOTLOADER_CMD);
+            }
+        }, SHUTDOWN_BROADCAST());
     }
 
     @OnClick(R.id.reboot_safe_mode)
     public void onRebootSafeModeClick(View view) {
-        runCmd(0, SHUTDOWN_BROADCAST());
-        runCmd(RUNNABLE_DELAY_MS, REBOOT_SAFE_MODE);
+        runCmdWithCallback(out -> {
+            if (out.isSuccess()) {
+                runCmd(REBOOT_SAFE_MODE);
+            }
+        }, SHUTDOWN_BROADCAST());
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishAnimation();
     }
 }

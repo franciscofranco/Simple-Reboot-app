@@ -1,11 +1,4 @@
 <resources>
-    <dimen name="dialogMargin">16dp</dimen>
-    <dimen name="dialogMinWidth">280dp</dimen>
     <dimen name="dialogElevation">8dp</dimen>
-    <dimen name="aboutMinHeight">64dp</dimen>
-    <dimen name="aboutPadding">16dp</dimen>
-    <dimen name="aboutTitlePaddingBottom">2dp</dimen>
-    <dimen name="itemMinHeight">56dp</dimen>
-    <dimen name="itemPadding">16dp</dimen>
-    <dimen name="dividerHeight">0.3dp</dimen>
+    <dimen name="itemMinHeight">40dp</dimen>
 </resources>

@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="simple.reboot.com">
 
     <application
-        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme.DialogStyle"
-        android:vmSafeMode="${vmSafeModeEnabled}">
+        tools:ignore="GoogleAppIndexingWarning">
 
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:excludeFromRecents="true"
+            android:label="@string/app_name"
+            android:launchMode="singleInstance"
+            android:taskAffinity=":MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
