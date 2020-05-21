@@ -4,24 +4,21 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.topjohnwu.superuser.Shell;
 
-import butterknife.BindView;
-import butterknife.OnClick;
+import java.util.List;
+import java.util.Locale;
+
+import simple.reboot.com.databinding.ActivityMainBinding;
+
 
 public class MainActivity extends AppCompatActivity {
-    @BindView(R.id.coordinator)
-    protected CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.container)
-    protected ViewGroup container;
+    private ActivityMainBinding b;
 
     // just for safe measure, we don't want any data corruption, right?
     private static String[] SHUTDOWN_BROADCAST() {
@@ -46,50 +43,45 @@ public class MainActivity extends AppCompatActivity {
     private static final String REBOOT_BOOTLOADER_CMD = "reboot bootloader";
     private static final String[] REBOOT_SAFE_MODE
             = new String[]{"setprop persist.sys.safemode 1", REBOOT_SOFT_REBOOT_CMD};
+    private static final String REBOOT_SYSTEMUI_CMD = "kill %d";
+    private static final String PKG_SYSTEMUI = "com.android.systemui";
+    private static final String PIDOF_SYSTEMUI = "pidof " + PKG_SYSTEMUI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        new MainActivity_ViewBinding(this);
+        b = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(b.getRoot());
 
         Shell.getShell(shell -> {
             if (!shell.isRoot()) {
-                if (coordinatorLayout != null) {
-                    Snackbar.make(coordinatorLayout, R.string.root_status_no,
+                if (b != null) {
+                    Snackbar.make(b.coordinator, R.string.root_status_no,
                             Snackbar.LENGTH_INDEFINITE)
                             .setAction(R.string.close, view -> finishAnimation()).show();
                 }
             }
         });
 
-        container.getViewTreeObserver()
-                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        if (container != null) {
-                            container.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-                            container.setTranslationY(coordinatorLayout.getHeight() >> 2);
-                            container.setTranslationX(container.getWidth());
-                            container.animate().cancel();
-                            container.animate().translationX(0f).setStartDelay(100)
-                                    .setListener(new AnimatorListenerAdapter() {
-                                        @Override
-                                        public void onAnimationStart(Animator animation) {
-                                            container.setVisibility(View.VISIBLE);
-                                        }
-                                    })
-                                    .start();
+        b.container.post(() -> {
+            b.container.setTranslationY(b.coordinator.getHeight() >> 2);
+            b.container.setTranslationX(b.container.getWidth());
+            b.container.animate().cancel();
+            b.container.animate().translationX(0f).setStartDelay(100)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            b.container.setVisibility(View.VISIBLE);
                         }
-                    }
-                });
+                    })
+                    .start();
+        });
     }
 
     private void finishAnimation() {
-        if (container != null) {
-            container.animate().cancel();
-            container.animate().translationX(container.getWidth())
+        if (b != null) {
+            b.container.animate().cancel();
+            b.container.animate().translationX(b.container.getWidth())
                     .setListener(new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
@@ -110,22 +102,18 @@ public class MainActivity extends AppCompatActivity {
         Shell.su(cmd).submit(callback);
     }
 
-    @OnClick(R.id.coordinator)
-    protected void onParentClick() {
+    public void onParentClick(View view) {
         onBackPressed();
     }
 
-    @OnClick(R.id.shutdown)
     public void onShutdownClick(View view) {
         runCmd(SHUTDOWN);
     }
 
-    @OnClick(R.id.reboot)
     public void onRebootClick(View view) {
         runCmd(REBOOT_CMD);
     }
 
-    @OnClick(R.id.soft_reboot)
     public void onSoftRebootClick(View view) {
         runCmdWithCallback(out -> {
             if (out.isSuccess()) {
@@ -134,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
         }, SHUTDOWN_BROADCAST());
     }
 
-    @OnClick(R.id.reboot_recovery)
     public void onRebootRecoveryClick(View view) {
         runCmdWithCallback(out -> {
             if (out.isSuccess()) {
@@ -143,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
         }, SHUTDOWN_BROADCAST());
     }
 
-    @OnClick(R.id.reboot_bootloader)
     public void onRebootBootloaderClick(View view) {
         runCmdWithCallback(out -> {
             if (out.isSuccess()) {
@@ -152,13 +138,28 @@ public class MainActivity extends AppCompatActivity {
         }, SHUTDOWN_BROADCAST());
     }
 
-    @OnClick(R.id.reboot_safe_mode)
     public void onRebootSafeModeClick(View view) {
         runCmdWithCallback(out -> {
             if (out.isSuccess()) {
                 runCmd(REBOOT_SAFE_MODE);
             }
         }, SHUTDOWN_BROADCAST());
+    }
+
+    public void onRebootSystemUi(View view) {
+        runCmdWithCallback(out -> {
+            if (out.isSuccess()) {
+                List<String> result = out.getOut();
+
+                if (result.size() == 1) {
+                    // pidof returns only one line anyway, guard just for safe measures
+                    String stdout = result.get(0).trim();
+                    int pid = Integer.parseInt(stdout);
+
+                    runCmd(String.format(Locale.getDefault(), REBOOT_SYSTEMUI_CMD, pid));
+                }
+            }
+        }, PIDOF_SYSTEMUI);
     }
 
     @Override

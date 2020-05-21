@@ -2,14 +2,15 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.1"
+    buildToolsVersion "29.0.3"
+    viewBinding.enabled = true
 
     defaultConfig {
         applicationId 'simple.reboot.com'
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 1803261729
-        versionName "8.1"
+        versionCode 1803261730
+        versionName "8.2"
     }
 
     compileOptions {
@@ -26,11 +27,9 @@ android {
 
     signingConfigs {
         debug {
-
         }
 
         release {
-
         }
     }
 
@@ -50,12 +49,6 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.android.material:material:1.1.0-alpha08'
-    if (properties.containsKey('android.injected.invoked.from.ide')) {
-        implementation 'com.jakewharton:butterknife-reflect:10.1.0'
-    } else {
-        implementation 'com.jakewharton:butterknife-runtime:10.1.0'
-        annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
-    }
-    implementation 'com.github.topjohnwu.libsu:core:2.5.0'
+    implementation 'com.google.android.material:material:1.2.0-alpha06'
+    implementation 'com.github.topjohnwu.libsu:core:2.5.1'
 }

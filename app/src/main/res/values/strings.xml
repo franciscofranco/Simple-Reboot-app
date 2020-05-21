@@ -9,4 +9,5 @@
     <string name="reboot_safe_mode">Restart to safe mode</string>
     <string name="shutdown">Power off</string>
     <string name="close">Close</string>
+    <string name="restart_systemui">Restart SystemUi</string>
 </resources>
