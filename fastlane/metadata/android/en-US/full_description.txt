@@ -1,0 +1,10 @@
+<p>It'll be the best reboot you'll ever experience.</p>
+<p>Do you want to reboot and your rom doesn't have that shortcut? Simple Reboot.</p>
+<p>Do you want to enter the recovery and you don't want to enter the line manually into the terminal? Simple Reboot.</p>
+<p>Do you want to enter your bootloader to use fastboot and there is no way reboot into it? Simple Reboot.</p>
+<p>Now also including a Soft Reboot and Safe Mode reboot options!</p>
+<p>Restart SystemUi without rebooting your device.</p>
+<p>Be afraid no more! This simple application gives you all the shortcuts for all these tasks without having to type it into command line or adb. You just need root and you're good to go!!!</p>
+<p>It only does what it's advertised, no shady permissions or data collection.</p>
+<p>For transparency the source code is available here: https://github.com/franciscofranco/Simple-Reboot-app</p>
+<p>It just works™</p>
