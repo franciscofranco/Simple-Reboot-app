@@ -1,21 +1,29 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
-    viewBinding.enabled = true
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
+
+    buildFeatures {
+        viewBinding true
+    }
 
     defaultConfig {
         applicationId 'simple.reboot.com'
         minSdkVersion 21
-        targetSdkVersion 29
-        versionCode 1803261730
-        versionName "8.2"
+        targetSdkVersion 30
+        versionCode 1803261731
+        versionName "8.3"
     }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
     lintOptions {
@@ -49,6 +57,16 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.android.material:material:1.2.0-alpha06'
-    implementation 'com.github.topjohnwu.libsu:core:2.5.1'
+    implementation 'com.google.android.material:material:1.3.0-alpha02'
+    implementation 'com.github.topjohnwu.libsu:core:3.0.2'
+    implementation "androidx.core:core-ktx:1.3.1"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
+    implementation "androidx.activity:activity-ktx:1.1.0"
+}
+repositories {
+    mavenCentral()
 }

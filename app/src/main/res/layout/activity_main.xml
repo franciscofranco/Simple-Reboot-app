@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:onClick="onParentClick">
+    android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/container"
@@ -28,7 +27,6 @@
                 style="@style/TextViewItems"
                 android:drawableTop="@drawable/ic_power_off"
                 android:drawablePadding="8dp"
-                android:onClick="onShutdownClick"
                 android:text="@string/shutdown" />
 
             <TextView
@@ -36,37 +34,31 @@
                 style="@style/TextViewItems"
                 android:drawableTop="@drawable/ic_restart"
                 android:drawablePadding="8dp"
-                android:onClick="onRebootClick"
                 android:text="@string/reboot" />
 
             <TextView
                 android:id="@+id/restart_systemui"
                 style="@style/TextViewItems"
-                android:onClick="onRebootSystemUi"
                 android:text="@string/restart_systemui" />
 
             <TextView
                 android:id="@+id/soft_reboot"
                 style="@style/TextViewItems"
-                android:onClick="onSoftRebootClick"
                 android:text="@string/soft_reboot" />
 
             <TextView
                 android:id="@+id/reboot_recovery"
                 style="@style/TextViewItems"
-                android:onClick="onRebootRecoveryClick"
                 android:text="@string/reboot_recovery" />
 
             <TextView
                 android:id="@+id/reboot_bootloader"
                 style="@style/TextViewItems"
-                android:onClick="onRebootBootloaderClick"
                 android:text="@string/reboot_bootloader" />
 
             <TextView
                 android:id="@+id/reboot_safe_mode"
                 style="@style/TextViewItems"
-                android:onClick="onRebootSafeModeClick"
                 android:text="@string/reboot_safe_mode" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
