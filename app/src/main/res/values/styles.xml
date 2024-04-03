@@ -14,15 +14,4 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
-
-    <style name="TextViewItems">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
-        <item name="android:gravity">center</item>
-        <item name="android:minHeight">@dimen/itemMinHeight</item>
-        <item name="android:padding">16dp</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
-    </style>
 </resources>
