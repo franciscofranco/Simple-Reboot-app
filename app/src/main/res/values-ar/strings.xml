@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Simple Reboot</string>
+    <string name="reboot">إعادة التشغيل</string>
+    <string name="reboot_recovery">إعادة التشغيل إلى وضع الإسترداد</string>
+    <string name="reboot_bootloader">إعادة التشغيل إلى محمل الإقلاع</string>
+    <string name="root_status_no">الروت غير موجود - هذا التطبيق لن يعمل أبداً</string>
+    <string name="soft_reboot">إعادة تشغيل ناعمة</string>
+    <string name="reboot_safe_mode">إعادة التشغيل إلى الوضع الآمن</string>
+    <string name="shutdown">إيقاف التشغيل</string>
+    <string name="close">إغلاق</string>
+    <string name="restart_systemui">إعادة تشغيل SystemUI</string>
+</resources>
